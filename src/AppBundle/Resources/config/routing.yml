@@ -1,0 +1,5 @@
+# ==== Managing cars ====
+AppBundle_car:
+    type: rest
+    resource: AppBundle\Controller\CarController
+    name_prefix: v1_

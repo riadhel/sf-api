@@ -1,0 +1,8 @@
+# ==== App bundle ====
+AppBundle:
+    type: rest
+    resource: "@AppBundle/Resources/config/routing.yml"
+    prefix: /v1/
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
