@@ -38,39 +38,30 @@ class Car
     /**
      * @ORM\Column(name="price", type="integer", nullable=false)
      * @Assert\NotBlank()
-     * @Assert\Type("integer")
      */
     private $price;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var array
      *
-     * @ORM\ManyToMany(targetEntity="Equipment")
-     * @ORM\JoinTable(name="carEquipment",
-     *      joinColumns={@ORM\JoinColumn(name="carId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="equipmentId", referencedColumnName="id")}
-     * )
+     * @ORM\Column(name="equipments", type="array", nullable=true)
      */
     private $equipments;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var array
      *
-     * @ORM\ManyToMany(targetEntity="Option")
-     * @ORM\JoinTable(name="carOption",
-     *      joinColumns={@ORM\JoinColumn(name="carId", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="optionId", referencedColumnName="id")}
-     * )
+     * @ORM\Column(name="options", type="array", nullable=true)
      */
     private $options;
 
     public function __construct() {
-        $this->equipments = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->options = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->equipments = [];
+        $this->options = [];
     }
 
     /**
-     * @return mixed
+     * @return integer
      */
     public function getId()
     {
@@ -78,15 +69,7 @@ class Car
     }
 
     /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getMaker()
     {
@@ -94,11 +77,12 @@ class Car
     }
 
     /**
-     * @param mixed $maker
+     * @param string $maker
      */
     public function setMaker($maker)
     {
         $this->maker = $maker;
+        return $this;
     }
 
     /**
@@ -115,6 +99,7 @@ class Car
     public function setModel($model)
     {
         $this->model = $model;
+        return $this;
     }
 
     /**
@@ -131,10 +116,11 @@ class Car
     public function setPrice($price)
     {
         $this->price = $price;
+        return $this;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getEquipments()
     {
@@ -142,31 +128,34 @@ class Car
     }
 
     /**
-     * @param \Doctrine\Common\Collections\Collection $equipments
+     * @param array $equipments
      */
     public function setEquipments($equipments)
     {
         $this->equipments = $equipments;
+        return $this;
     }
 
     /**
-     * @param Equipment|null $equipment
+     * @param string|null $equipment
      */
-    public function addEquipment(Equipment $equipment = null)
+    public function addEquipment($equipment = null)
     {
-        $this->equipments->add($equipment);
+        $this->equipments[] = $equipment;
     }
 
     /**
-     * @param Equipment $equipment
+     * @param string $equipment
      */
-    public function removeEquipment(Equipment $equipment)
+    public function removeEquipment($equipment)
     {
-        $this->equipments->removeElement($equipment) ;
+        if(($key = array_search($equipment, $this->equipments)) !== false) {
+            unset($this->equipments[$key]);
+        }
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
     public function getOptions()
     {
@@ -174,26 +163,29 @@ class Car
     }
 
     /**
-     * @param \Doctrine\Common\Collections\Collection $options
+     * @param array $options
      */
     public function setOptions($options)
     {
         $this->options = $options;
+        return $this;
     }
 
     /**
-     * @param Option|null $option
+     * @param string|null $option
      */
-    public function addOption(Option $option = null)
+    public function addOption($option = null)
     {
-        $this->equipments->add($option);
+        $this->equipments[] = $option;
     }
 
     /**
-     * @param Option $option
+     * @param string $option
      */
-    public function removeOption(Option $option)
+    public function removeOption($option)
     {
-        $this->equipments->removeElement($option);
+        if(($key = array_search($option, $this->options)) !== false) {
+            unset($this->options[$key]);
+        }
     }
 }

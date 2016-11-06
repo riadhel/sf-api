@@ -32,7 +32,7 @@ class CarRepository extends EntityRepository
             $car->setPrice($newPrice);
             $this->_em->persist($car);
             $this->_em->flush();
-            return 'Price udated correctly!';
+            return 'Price updated correctly!';
         } else {
             return 'Object not found!';
         }

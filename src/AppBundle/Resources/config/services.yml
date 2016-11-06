@@ -1,0 +1,6 @@
+services:
+    # ==== Manage the cars ====
+    api.manager.car:
+        class: AppBundle\Manager\CarManager
+        arguments:
+            - '@doctrine.orm.entity_manager'

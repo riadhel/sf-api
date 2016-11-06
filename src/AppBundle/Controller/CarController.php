@@ -35,10 +35,12 @@ class CarController extends FOSRestController
      *  }
      * )
      */
-    public function getListCarsAction()
+    public function getListCarsAction(Request $request)
     {
-        $todoList = $this->getDoctrine()->getRepository('AppBundle:Car')->findAll();
-        $response = new JsonResponse(json_encode($todoList));
+        $carManager = $this->get('api.manager.car');
+        $data = $carManager->getList($request);
+        $response = new JsonResponse($data);
+
         return $response;
     }
 
@@ -75,20 +77,26 @@ class CarController extends FOSRestController
 
         $response = new JsonResponse('no-data');
         if ($request->getMethod() === 'POST') {
+            $form->submit($request->request->all(), true);
             $form->handleRequest($request);
-            if($form->isValid() ) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($car);
-                $em->flush();
+
+            $validator = $this->get('validator');
+            $errors = $validator->validate($car);
+
+            if (count($errors) > 0) {
                 $responseObject = array(
-                    'message' => 'Data saved correctly!'
+                    'message' => (string) $errors
                 );
-            } else {
+            } else  {
+                $em = $this->getDoctrine()->getManager();
+                $car = $form->getData();
+                $em->persist($car);
+                $em->flush($car);
                 $responseObject = array(
-                    'message' => $form->getErrors()
+                    'message' => 'Car data saved correctly!'
                 );
             }
-            $response = new JsonResponse(json_encode($responseObject));
+            $response = new JsonResponse($responseObject);
         }
         return $response;
     }
@@ -112,7 +120,7 @@ class CarController extends FOSRestController
      *          "requirement"="json",
      *          "required"="true"
      *      }
-     *  }
+     *  },
      * )
      *
      * @param Request $request
@@ -131,18 +139,24 @@ class CarController extends FOSRestController
         );
         if($car !== null) {
             $form = $this->createForm(CarType::class, $car);
-            if ($request->getMethod() === 'POST') {
+            if ($request->getMethod() === 'PUT') {
+                $form->submit($request->request->all(), true);
                 $form->handleRequest($request);
-                if($form->isValid() ) {
+
+                $validator = $this->get('validator');
+                $errors = $validator->validate($car);
+
+                if (count($errors) > 0) {
+                    $responseObject = array(
+                        'message' => (string) $errors
+                    );
+                } else  {
                     $em = $this->getDoctrine()->getManager();
+                    $car = $form->getData();
                     $em->persist($car);
-                    $em->flush();
+                    $em->flush($car);
                     $responseObject = array(
                         'message' => 'Car data modified correctly!'
-                    );
-                } else {
-                    $responseObject = array(
-                        'message' => $form->getErrors()
                     );
                 }
             }
@@ -151,7 +165,7 @@ class CarController extends FOSRestController
                 'message' => 'Object not found!'
             );
         }
-        $response = new JsonResponse(json_encode($responseObject));
+        $response = new JsonResponse($responseObject);
         return $response;
     }
 
@@ -169,11 +183,11 @@ class CarController extends FOSRestController
      *  }
      * )
      */
-    public function deleteRemoveCar($id)
+    public function deleteRemoveCarAction($id)
     {
         $message = $this->getDoctrine()->getRepository('AppBundle:Car')->delete($id);
         $responseObject = array( 'message' => $message );
-        $response = new JsonResponse(json_encode($responseObject));
+        $response = new JsonResponse($responseObject);
         return $response;
     }
 
@@ -191,7 +205,7 @@ class CarController extends FOSRestController
      *  }
      * )
      */
-    public function updateCarPrice($id, $price)
+    public function updateCarPriceAction($id, $price)
     {
         $message = $this->getDoctrine()->getRepository('AppBundle:Car')->complete($id, $price);
         $responseObject = array(

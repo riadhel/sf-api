@@ -7,8 +7,8 @@
  * Time: 22:24
  */
 namespace AppBundle\Form;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,19 +18,27 @@ class CarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('marker', TextType::class)
+            ->add('maker', TextType::class)
             ->add('model', TextType::class)
             ->add('price', TextType::class)
-            ->add('equipment', EntityType::class)
-            ->add('option', EntityType::class)
+            ->add('equipments', TextType::class)
+            ->add('options', TextType::class)
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Car'
+            'data_class' => 'AppBundle\Entity\Car',
+            'csrf_protection' => false,
         ));
     }
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'car';
+    }
 }
