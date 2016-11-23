@@ -87,7 +87,7 @@ class CarController extends FOSRestController
                 $responseObject = array(
                     'message' => (string) $errors
                 );
-            } else  {
+            } else {
                 $em = $this->getDoctrine()->getManager();
                 $car = $form->getData();
                 $em->persist($car);
@@ -137,7 +137,7 @@ class CarController extends FOSRestController
         $responseObject = array(
             'message' => 'no-data'
         );
-        if($car !== null) {
+        if ($car !== null) {
             $form = $this->createForm(CarType::class, $car);
             if ($request->getMethod() === 'PUT') {
                 $form->submit($request->request->all(), true);
@@ -150,7 +150,7 @@ class CarController extends FOSRestController
                     $responseObject = array(
                         'message' => (string) $errors
                     );
-                } else  {
+                } else {
                     $em = $this->getDoctrine()->getManager();
                     $car = $form->getData();
                     $em->persist($car);
@@ -186,7 +186,7 @@ class CarController extends FOSRestController
     public function deleteRemoveCarAction($id)
     {
         $message = $this->getDoctrine()->getRepository('AppBundle:Car')->delete($id);
-        $responseObject = array( 'message' => $message );
+        $responseObject = array('message' => $message);
         $response = new JsonResponse($responseObject);
         return $response;
     }
