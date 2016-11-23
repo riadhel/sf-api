@@ -2,6 +2,7 @@
 
 namespace AppBundle\Manager;
 use AppBundle\Entity\Car;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,12 +23,12 @@ class CarManager
     /**
      * ManageChannel constructor.
      *
-     * @param EntityManager       $manager   Symfony entity manager
+     * @param ManagerRegistry       $doctrine   Symfony manager registery
      */
     public function __construct(
-        EntityManager $manager
+        ManagerRegistry $doctrine
     ) {
-        $this->manager = $manager;
+        $this->manager = $doctrine->getManager();
     } // __construct
 
     /**
@@ -36,7 +37,7 @@ class CarManager
      * @param Request $request Action request
      * @return array
      */
-    public function getList(Request $request)
+    public function getList()
     {
         // ==== Initialisation ====
         $cars = $this->manager->getRepository('AppBundle:Car')
