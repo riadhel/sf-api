@@ -34,7 +34,6 @@ class CarManager
     /**
      * The cars list
      *
-     * @param Request $request Action request
      * @return array
      */
     public function getList()
@@ -52,12 +51,12 @@ class CarManager
         /** @var Car $car */
         foreach ($cars as $car) {
             $data['cars'][] = [
-                'id'          => $car->getId(),
-                'maker'        => $car->getMaker(),
-                'model'     => $car->getModel(),
-                'price'     => $car->getPrice(),
-                'options'   => $car->getOptions(),
-                'equipments'   => $car->getEquipments(),
+                'id'            => $car->getId(),
+                'maker'         => $car->getMaker(),
+                'model'         => $car->getModel(),
+                'price'         => $car->getPrice(),
+                'options'       => $car->getOptions(),
+                'equipments'    => $car->getEquipments(),
             ];
         }
 
